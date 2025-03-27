@@ -45,7 +45,6 @@ def snippet_page(request, snippetId):
         snippet = Snippet.objects.get(pk=snippetId)
     except ObjectDoesNotExist:
         return render(request, 'pages/errors.html', context | {'error': f'Snippet with id={snippetId} not found'})
-        # return HttpResponseNotFound(f'Snippet with id={snippetId} not found')
     else:
         context['snippet'] = snippet
     return render(request, 'pages/snippet_page.html', context)
