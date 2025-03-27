@@ -44,7 +44,7 @@ def snippet_page(request, snippetId):
     try:
         snippet = Snippet.objects.get(pk=snippetId)
     except ObjectDoesNotExist:
-        return render(request, 'pages/errors.html', context | {'error': f'Snippet with id={snippetId} not found'})
+        return render(request, context | {'error': f'Snippet with id={snippetId} not found'})
     else:
         context['snippet'] = snippet
         context['type'] = 'view'
@@ -52,7 +52,36 @@ def snippet_page(request, snippetId):
 
 
 def snippet_edit(request, snippetId):
-    pass
+    context = {'pagename': 'Редактирование сниппета'}
+    try:
+        snippet = Snippet.objects.get(pk=snippetId)
+    except ObjectDoesNotExist:
+        return Http404
+    
+    # Вариант 1
+    # # Получение данных сниппета с помощью SnippetForm
+    # if request.method == 'GET':
+    #     form = SnippetForm(instance=snippet)
+    #     return render(request, 'pages/add_snippet.html', {'form': form})
+
+
+    # Вариант 2
+    # Хотим получить страницу с данными сниппета
+    if request.method == 'GET':
+        form = SnippetForm()
+        context['snippet'] = snippet
+        context['type'] = 'edit'
+        return render(request, 'pages/snippet_page.html', context)
+    
+    # Получаем данные из формы и создаем новый snippet в БД
+    if request.method == "POST":
+        data_form = request.POST
+        snippet.name = data_form['name']
+        snippet.code = data_form['code']
+        snippet.save()
+        return redirect('view-snippet') # GET /snippet_list/list
+
+
 
 def snippet_delete(request, snippetId):
     if request.method == "POST" or request.method == "GET":

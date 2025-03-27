@@ -34,10 +34,13 @@
                             <td scope="row">{{snippet.pk}}</td>
                             <td><a href="{% url "snippet-page" snippet.id %}">{{snippet.name}}</a>
                                 <a href="{% url "snippet-delete" snippet.id %}">
-                                <i class="color: red; fa-solid fa-trash"></i></a>
+                                    <i class="color: red; fa-solid fa-trash"></i>
+                                </a>
+                                <a href="{% url "snippet-edit" snippet.id %}">
+                                    <i class="color: red; fas fa-edit"></i>
+                                </a>
                             </td>
-                            <td>{{snippet.creation_date | date:"Y-m-d H:i:s"}}</td>
-                            
+                            <td>{{snippet.creation_date | date:"Y-m-d H:i:s"}}</td>                            
                             <td>
                                 <form action="{% url "snippet-delete" snippet.id %}" method="post">
                                     {% csrf_token %}
