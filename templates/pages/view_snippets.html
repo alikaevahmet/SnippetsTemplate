@@ -27,6 +27,7 @@
                         <th scope="col">Дата создания</th>
                         <th scope="col">Удалить</th>
                         <th scope="col">Пользователь</th>
+                        <th scope="col">Тип сниппета</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -34,12 +35,13 @@
                         <tr>
                             <td scope="row">{{snippet.pk}}</td>
                             <td><a href="{% url "snippet-page" snippet.id %}">{{snippet.name}}</a>
-                                <a href="{% url "snippet-delete" snippet.id %}">
-                                    <i class="color: red; fa-solid fa-trash"></i>
-                                </a>
-                                <a href="{% url "snippet-edit" snippet.id %}">
-                                    <i class="color: red; fas fa-edit"></i>
-                                </a>
+                                {% if request.user == snippet.user %}
+                                    <a href="{% url "snippet-delete" snippet.id %}">
+                                        <i class="color: red; fa-solid fa-trash"></i>
+                                    </a>
+                                    <a href="{% url "snippet-edit" snippet.id %}">
+                                        <i class="color: red; fas fa-edit"></i></a>
+                                {% endif %}
                             </td>
                             <td>{{snippet.creation_date | date:"Y-m-d H:i:s"}}</td>                            
                             <td>
@@ -49,6 +51,12 @@
                                 </form>
                             </td>
                             <td>{{snippet.user.username}}</td>
+                            <td>{% if snippet.public %}
+                                    Публичный
+                                {% else %}
+                                    Приватный
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
