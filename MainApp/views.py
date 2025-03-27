@@ -1,8 +1,8 @@
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
-from .models import Snippet
+from MainApp.models import Snippet
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import SnippetForm
+from MainApp.forms import SnippetForm
 
 def index_page(request):
     context = {'pagename': 'PythonBin'}
@@ -10,12 +10,24 @@ def index_page(request):
 
 
 def add_snippet_page(request):
-    form = SnippetForm()
-    context = {
-        'pagename': 'Добавление нового сниппета',
-        'form': form
-        }
-    return render(request, 'pages/add_snippet.html', context)
+    # Создаем пустую форму при запросе GET
+    if request.method == 'GET':
+        form = SnippetForm()
+        context = {
+            'pagename': 'Добавление нового сниппета',
+            'form': form
+            }
+        return render(request, 'pages/add_snippet.html', context)
+    
+    # Получаем данные из формы и создаем новый snippet в БД
+    if request.method == "POST":
+        form = SnippetForm(request.POST)
+        if form.is_valid():
+             form.save()
+             return redirect('view-snippet') # GET /snippet_list/list
+        return render(request, 'pages/add_snippet.html', {'form': form})
+    
+
 
 
 def snippets_page(request):
@@ -38,10 +50,10 @@ def snippet_page(request, snippetId):
         context['snippet'] = snippet
     return render(request, 'pages/snippet_page.html', context)
 
-def create_snippet(request):
-    if request.method == "POST":
-        form = SnippetForm(request.POST)
-        if form.is_valid():
-             form.save()
-             return redirect('view-snippet') # GET /snippet_list/list
-        return render(request, 'pages/add_snippet.html', {'form': form})
+# def create_snippet(request):
+#     if request.method == "POST":
+#         form = SnippetForm(request.POST)
+#         if form.is_valid():
+#              form.save()
+#              return redirect('view-snippet') # GET /snippet_list/list
+#         return render(request, 'pages/add_snippet.html', {'form': form})
