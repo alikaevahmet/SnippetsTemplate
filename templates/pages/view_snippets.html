@@ -25,7 +25,7 @@
                         <th scope="col">ID</th>
                         <th scope="col">Название</th>
                         <th scope="col">Дата создания</th>
-                        <th scope="col">Удалить</th>
+                        <th scope="col">Удалить/Редактировать</th>
                         <th scope="col">Пользователь</th>
                         <th scope="col">Тип сниппета</th>
                     </tr>
@@ -35,6 +35,9 @@
                         <tr>
                             <td scope="row">{{snippet.pk}}</td>
                             <td><a href="{% url "snippet-page" snippet.id %}">{{snippet.name}}</a>
+                            </td>
+                            <td>{{snippet.creation_date | date:"Y-m-d H:i:s"}}</td>                            
+                            <td>
                                 {% if request.user == snippet.user %}
                                     <a href="{% url "snippet-delete" snippet.id %}">
                                         <i class="color: red; fa-solid fa-trash"></i>
@@ -42,13 +45,6 @@
                                     <a href="{% url "snippet-edit" snippet.id %}">
                                         <i class="color: red; fas fa-edit"></i></a>
                                 {% endif %}
-                            </td>
-                            <td>{{snippet.creation_date | date:"Y-m-d H:i:s"}}</td>                            
-                            <td>
-                                <form action="{% url "snippet-delete" snippet.id %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
                             </td>
                             <td>{{snippet.user.username}}</td>
                             <td>{% if snippet.public %}

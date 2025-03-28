@@ -128,7 +128,7 @@ def create_user(request):
         context['form'] = form
         return render(request, 'pages/registration.html', context)
     
-    # Получаем данные из формы и создаем новый snippet в БД
+    # Получаем данные из формы и создаем нового пользователя в БД
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
